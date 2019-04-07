@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>SDP APP</title>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans'
+	rel='stylesheet' type='text/css' />
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+<script type="text/javascript" src="./static/js/app.js"></script>
+<script type="text/javascript" src="./static/js/angular-animate.js"></script>
+<script type="text/javascript" src="./static/js/angular.js"></script>
+<script type="text/javascript" src="./static/js/directives.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+<body ng-app="sdpappManagerApp">
+	<div ng-controller="loginController">
+		<h4 class="page-title">Spring Rest Service</h4>
+
+		<h1>Login Controller Service Calls</h1>
+		<table class="loginControllerServiceCall">
+			<tr>
+				<td><br />
+					<button ng-click="addTask()">isUserId</button></td>
+				<td><br />
+					<button ng-click="sendPasswordByMail()">sendPasswordByMail</button></td>
+				<td><br />
+					<button ng-click="logout()">logout</button></td>
+
+				<td><br />
+					<button ng-click="login()">login</button></td>
+
+
+			</tr>
+		</table>
+
+		<h1>System Controller Service Calls</h1>
+		<table class="systemControllerServiceCall">
+
+			<tr>
+				<td><br />
+					<button ng-click="listUserFiles()">listUserFiles</button></td>
+				<td><br />
+					<button ng-click="listSharedFiles()">listSharedFiles</button></td>
+			</tr>
+			<tr>
+
+			</tr>
+		</table>
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
+						<label for="myFileField">Select a file: </label> <input
+							type="file" demo-file-model="myFile" class="form-control"
+							id="myFileField" />
+					</div>
+					<button ng-click="uploadFile()" class="btn btn-primary">Upload
+						File</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
