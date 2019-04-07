@@ -1,6 +1,7 @@
 package com.imagetracker.service;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -12,13 +13,15 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 public class CommonService {
 
-	public void getObj(AmazonS3 s3client) {
+	private URL url;
+
+	public void getObjURL(AmazonS3 s3client) {
 		String bucketName = CommonConstants.BUCKET_NAME;
-		String objectName = CommonConstants.BUCKET_FILE_PATH;
 
 		try {
-			S3Object s3object = s3client.getObject(bucketName, objectName);
+			S3Object s3object = s3client.getObject(bucketName, CommonConstants.FOLDER_NAME+"/"+"");
 			S3ObjectInputStream inputStream = s3object.getObjectContent();
+			url = s3client.getUrl(bucketName, s3object.getKey());
 			FileUtils.copyInputStreamToFile(inputStream, new File(CommonConstants.LOCAL_DOWNLOAD_PATH));
 
 			System.out.println("file copied to destination.");

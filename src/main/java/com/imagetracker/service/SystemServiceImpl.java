@@ -1,11 +1,14 @@
 package com.imagetracker.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -20,8 +23,14 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.imagetracker.dto.ResultDTO;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.imagetracker.util.FileStorageProperties;
 
 @Service
@@ -33,7 +42,9 @@ public class SystemServiceImpl implements SystemService {
 	private Path fileStorageLocation;
 
 	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	private URL url;
 
+	private PutObjectResult putObject;
 	@PostConstruct
 	public void init() {
 		this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
@@ -55,14 +66,7 @@ public class SystemServiceImpl implements SystemService {
 		// credentials object identifying user for authentication
 		// user must have AWSConnector and AmazonS3FullAccess for
 		// this example to work
-		AWSCredentials credentials = new BasicAWSCredentials(CommonConstants.ACCESS_KEY_ID,
-				CommonConstants.ACCESS_SEC_KEY);
-
-		// create a client connection based on credentials
-		// AmazonS3 s3client = new AmazonS3Client(credentials);
-
-		AmazonS3 s3client = AmazonS3ClientBuilder.standard()
-				.withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_2).build();
+		AmazonS3 s3client = gets3ClientObject();
 
 		// create bucket - name must be unique for all S3 users
 		if (!s3client.doesBucketExistV2(CommonConstants.BUCKET_NAME))
@@ -71,7 +75,11 @@ public class SystemServiceImpl implements SystemService {
 		// upload file to folder and set it to public
 		String filePath = CommonConstants.FOLDER_NAME + CommonConstants.SUFFIX + file.getOriginalFilename();
 		try {
-			s3client.putObject(CommonConstants.BUCKET_NAME, filePath, file.getInputStream(), new ObjectMetadata());
+//			s3client.putObject(CommonConstants.BUCKET_NAME, filePath, file.getInputStream(), new ObjectMetadata());
+			putObject = s3client.putObject(
+					   new PutObjectRequest(CommonConstants.BUCKET_NAME, filePath, file.getInputStream(), new ObjectMetadata())
+					      .withCannedAcl(CannedAccessControlList.PublicRead));
+			
 		} catch (SdkClientException | IOException e) {
 			e.printStackTrace();
 		}
@@ -82,6 +90,36 @@ public class SystemServiceImpl implements SystemService {
 		 */
 
 		System.out.println("Execution Completed");
+	}
+
+	private AmazonS3 gets3ClientObject() {
+		AWSCredentials credentials = new BasicAWSCredentials(CommonConstants.ACCESS_KEY_ID,
+				CommonConstants.ACCESS_SEC_KEY);
+
+		// create a client connection based on credentials
+		// AmazonS3 s3client = new AmazonS3Client(credentials);
+
+		AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_2).build();
+		return s3client;
+	}
+	
+	public void getObjDetails() {
+		AmazonS3 s3client = gets3ClientObject();
+		String bucketName = CommonConstants.BUCKET_AND_FOLDERNAME;
+
+		try {
+			ListObjectsRequest listObjectsRequest =new ListObjectsRequest() .withBucketName(bucketName).withPrefix("upload"+ "/");
+			ObjectListing objects = s3client.listObjects(listObjectsRequest);
+			List<S3ObjectSummary> list = objects.getObjectSummaries();
+			for(S3ObjectSummary image: list) {
+			    S3Object s3object = s3client.getObject(bucketName, image.getKey());
+			    url = s3client.getUrl(bucketName, s3object.getKey());
+			    System.out.println("url : "+url);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

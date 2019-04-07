@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	>
+	xmlns:th="http://www.thymeleaf.org">
 
 <head>
 <title>Image Tracker-Home</title>
@@ -28,33 +27,41 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
 </head>
 <body>
-	<h1 th:inline="text">Hello</h1>
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" value="Sign Out" />
-	</form>
+
 
 
 	<div class="limiter">
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out" />
+		</form>
 		<div class="container-login100">
+
 			<div class="wrap-login100">
-		<!-- 	<div class="login100-form-title"
+				<!-- <div>
+					<img alt=""
+						src="https://s3.us-east-2.amazonaws.com/awsrekognitionimageupload/upload/EBS.jpg"></img>
+				</div> -->
+				<div class="login100-form-title"
 					style="background-image: url(images/bg-01.jpg);">
 					<span class="login100-form-title-1"> Upload File to S3 </span>
-				</div> -->
-		<form method="POST" enctype="multipart/form-data" action="/addFileToSharedFolder">
-			<table>
-				<tr>
-					<td>File to upload:</td>
-					<td><input class="input100" type="file" accept="image/*" name="file" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" value="Upload" /></td>
-				</tr>
-			</table>
-		</form>
-	</div>
-	</div>
+				</div>
+				<form method="POST" enctype="multipart/form-data"
+					action="/addFileToSharedFolder">
+					<table style = "margin:auto; ">
+						<tr>
+							<td>File to upload:</td>
+							<td><input class="input100" type="file" accept="image/*"
+								name="file" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input type="submit" value="Upload"
+								style="display: -webkit-box; display: -webkit-flex; display: -moz-box; display: -ms-flexbox; display: flex; justify-content: center; align-items: center; padding: 0 20px; min-width: 300px; height: 31px; background-color: #57b846; border-radius: 25px; font-family: Poppins-Regular; font-size: 16px; color: #fff; line-height: 1.2; -webkit-transition: all 0.4s; -o-transition: all 0.4s; -moz-transition: all 0.4s; transition: all 0.4s;" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
 	</div>
 	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>

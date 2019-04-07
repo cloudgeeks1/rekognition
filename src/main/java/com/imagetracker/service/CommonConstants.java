@@ -8,13 +8,14 @@ public class CommonConstants {
 	
 	public static String BUCKET_NAME = "awsrekognitionimageupload";
 	
+	public static String BUCKET_AND_FOLDERNAME = "awsrekognitionimageupload";
+	
 	public static String FOLDER_NAME = "upload";
 	
 	public static String FILE_NAME = "home.html";
 	
 	public static String FILE_PATH = "uploads";
 	
-	public static String BUCKET_FILE_PATH = "storeFiles/Invoice_May.pdf";
 	
 	public static String LOCAL_DOWNLOAD_PATH = "C:\\\\Users\\\\Pratik Joshi\\\\Desktop\\\\Invoice_May_new.pdf";
 	

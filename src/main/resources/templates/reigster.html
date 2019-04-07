@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" >
 <head>
-<title>Image Tracker-Home</title>
+<title>Image tracker</title>
 
 <!--===============================================================================================-->
 
@@ -26,40 +24,50 @@
 	th:href="@{/vendor/daterangepicker/daterangepicker.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+
+
+
+
+
 </head>
 <body>
-	<h1 th:inline="text">Hello </h1>
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" value="Sign Out" />
-	</form>
-
 
 	<div class="limiter">
-
-
-
-
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-form-title"
 					style="background-image: url(images/bg-01.jpg);">
-					<span class="login100-form-title-1"><span th:text="${parameters}"></span> </span>
+					<span class="login100-form-title-1"> Register </span>
+					 <span class="login100-form-title-1" th:text="${parameters}"></span>
 				</div>
-				<form method="POST" enctype="multipart/form-data" action="/addFileToSharedFolder">
-			<table>
-				<tr>
-					<td>File to upload:</td>
-					<td><input class="input100" type="file" accept="image/*" name="file" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" value="Upload" /></td>
-				</tr>
-			</table>
-		</form>
+					
+
+				<form class="login100-form validate-form" method="POST"  action="/register">
+					<div class="wrap-input100 validate-input m-b-26"
+						data-validate="Username is required">
+						<span class="label-input100">Username</span> <input
+							class="input100" type="text" name="username"
+							placeholder="Enter username">  </input><span
+							class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-18"
+						data-validate="Password is required">
+						<span class="label-input100">Password</span> <input
+							class="input100" type="password" name="password"
+							placeholder="Enter password"> </input><span
+							class="focus-input100"></span>
+					</div>
+
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">Register</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
+
 	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<!--===============================================================================================-->
@@ -77,5 +85,4 @@
 	<!--===============================================================================================-->
 	<script src="js/main.js"></script>
 </body>
-
 </html>

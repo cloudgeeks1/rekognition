@@ -8,4 +8,5 @@ public interface SystemService {
 
 	public void addFileToSharedFolder(MultipartFile file);
 
+	public void getObjDetails();
 }

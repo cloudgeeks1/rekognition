@@ -28,7 +28,6 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
 </head>
 <body>
-	<h1 th:inline="text">Hello</h1>
 	<form th:action="@{/logout}" method="post">
 		<input type="submit" value="Sign Out" />
 	</form>
@@ -41,10 +40,16 @@
 
 		<div class="container-login100">
 			<div class="wrap-login100">
+				<form th:action="@{/home}" method="post">
+					<input type="submit" value="Back" />
+				</form>
 				<div class="login100-form-title"
 					style="background-image: url(images/bg-01.jpg);">
-					<span class="login100-form-title-1"> Uploaded Image will be at location S3:// <span th:text="${parameters}"></span> </span>
+					<span class="login100-form-title-1"> Uploaded Image will be
+						at location S3:// <span th:text="${parameters}"></span>
+					</span>
 				</div>
+
 			</div>
 		</div>
 	</div>

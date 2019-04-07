@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Image Tracker-Home</title>
+<title>Image tracker</title>
 
 <!--===============================================================================================-->
 
@@ -26,40 +24,30 @@
 	th:href="@{/vendor/daterangepicker/daterangepicker.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}" />
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+
+
+
+
+
 </head>
-<body>
-	<h1 th:inline="text">Hello </h1>
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" value="Sign Out" />
-	</form>
+<body style="background:aqua;">
 
-
-	<div class="limiter">
-
-
-
-
-		<div class="container-login100">
+	<div class="limiter" style="margin:15%">
+		<div class="container-login100" style="margin-left:30%">
 			<div class="wrap-login100">
-				<div class="login100-form-title"
-					style="background-image: url(images/bg-01.jpg);">
-					<span class="login100-form-title-1"><span th:text="${parameters}"></span> </span>
+				<div class="login100-form-title">
+				    <h1>Welcome to Image Gallary</h1>
+					<a href="/loginForm" style="margin-left:94px; margin-right:31px;">Login </a> <a href="/regisrationForm">Register</a>
+
+
+
 				</div>
-				<form method="POST" enctype="multipart/form-data" action="/addFileToSharedFolder">
-			<table>
-				<tr>
-					<td>File to upload:</td>
-					<td><input class="input100" type="file" accept="image/*" name="file" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" value="Upload" /></td>
-				</tr>
-			</table>
-		</form>
+
 			</div>
+
 		</div>
 	</div>
+
 	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<!--===============================================================================================-->
@@ -77,5 +65,4 @@
 	<!--===============================================================================================-->
 	<script src="js/main.js"></script>
 </body>
-
 </html>
