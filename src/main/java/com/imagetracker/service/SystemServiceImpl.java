@@ -1,6 +1,5 @@
 package com.imagetracker.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -21,6 +20,15 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.rekognition.AmazonRekognition;
+import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
+import com.amazonaws.services.rekognition.model.AmazonRekognitionException;
+import com.amazonaws.services.rekognition.model.DetectLabelsRequest;
+import com.amazonaws.services.rekognition.model.DetectLabelsResult;
+import com.amazonaws.services.rekognition.model.Image;
+import com.amazonaws.services.rekognition.model.Instance;
+import com.amazonaws.services.rekognition.model.Label;
+import com.amazonaws.services.rekognition.model.Parent;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -121,5 +129,22 @@ public class SystemServiceImpl implements SystemService {
 			e.printStackTrace();
 		}
 	}
+	
+	public void rekognitionImage() {
+		AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
+		AmazonS3 s3client = gets3ClientObject();
+        DetectLabelsRequest request = new DetectLabelsRequest()
+                .withImage(new Image().withS3Object(new com.amazonaws.services.rekognition.model.S3Object().withName("").withBucket( CommonConstants.BUCKET_AND_FOLDERNAME)))
+                .withMaxLabels(10).withMinConfidence(75F);
+
+        try {
+            DetectLabelsResult result = rekognitionClient.detectLabels(request);
+            List<Label> labels = result.getLabels();
+
+            
+        }catch (AmazonRekognitionException e) {
+            e.printStackTrace();
+        } 
+    }
 
 }
