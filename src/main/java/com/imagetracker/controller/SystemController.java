@@ -1,7 +1,10 @@
 package com.imagetracker.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -119,10 +122,20 @@ public class SystemController {
 	@RequestMapping(value = "/home", method = RequestMethod.POST)
 	public ModelAndView home(HttpSession session) {
 		//service.getObjDetails();
+		List<String> s3Url = new ArrayList();
+		Set<String> lables = new HashSet();
+		
 		List<File> usersImageInfo = dao.getUsersImageInfo(dao.RetriveConnection(),
 				String.valueOf(session.getAttribute("username")),
 				String.valueOf(session.getAttribute("userId")));
 		ModelAndView mav = new ModelAndView();
+		for (File file : usersImageInfo) {
+			s3Url.add(file.getUrl());
+			String[] split = file.getLabels().split(",");
+			service.removeDuplicateLables(lables,split);
+		}
+		mav.addObject("s3Url", s3Url);
+		mav.addObject("labels", lables);
 		//mav.addObject("url",usersImageInfo.)
 		mav.setViewName("home");
 

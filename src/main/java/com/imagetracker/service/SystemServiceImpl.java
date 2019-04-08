@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -154,4 +155,13 @@ public class SystemServiceImpl implements SystemService {
         } 
         return "";
     }
+
+	@Override
+	public void removeDuplicateLables(Set<String> lables, String[] split) {
+		// TODO Auto-generated method stub
+		for (String label : split) {
+			lables.add(label);
+		}
+		
+	}
 }
