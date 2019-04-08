@@ -8,7 +8,6 @@ public class CommonConstants {
 	
 	public static String BUCKET_NAME = "awsrekognitionimageupload";
 	
-	public static String BUCKET_AND_FOLDERNAME = "awsrekognitionimageupload";
 	
 	public static String FOLDER_NAME = "upload";
 	

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,7 @@ public class SystemController {
 		boolean b = m.find();
 		if (asList.contains(fileName[1]) && (!m.find())) {
 			service.addFileToSharedFolder(file);
+			service.rekognitionImage(file.getOriginalFilename());
 			mav.addObject("parameters", CommonConstants.BUCKET_NAME);
 			mav.setViewName("display");
 			return mav;
@@ -48,10 +51,12 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ModelAndView login(@RequestParam("username") String username, @RequestParam("password") String passsword) {
+	public ModelAndView login(@RequestParam("username") String username, @RequestParam("password") String passsword,HttpSession session) {
 		ModelAndView mav = new ModelAndView();
 		ConnectionDao dao = new ConnectionDao();
-		if (dao.getUserList(dao.RetriveConnection(), username, passsword)) {
+		int userId = dao.getUserList(dao.RetriveConnection(), username, passsword);
+		if (userId!=0) {
+			session.setAttribute("userId", userId);
 			mav.setViewName("home");
 		} else {
 			mav.addObject("parameters", "Invalid Username/Password");
@@ -110,7 +115,7 @@ public class SystemController {
 
 	@RequestMapping(value = "/home", method = RequestMethod.POST)
 	public ModelAndView home() {
-		service.getObjDetails();
+		//service.getObjDetails();
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("home");
 

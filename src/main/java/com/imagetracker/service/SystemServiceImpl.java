@@ -88,6 +88,9 @@ public class SystemServiceImpl implements SystemService {
 					   new PutObjectRequest(CommonConstants.BUCKET_NAME, filePath, file.getInputStream(), new ObjectMetadata())
 					      .withCannedAcl(CannedAccessControlList.PublicRead));
 			
+			
+			
+			
 		} catch (SdkClientException | IOException e) {
 			e.printStackTrace();
 		}
@@ -112,39 +115,43 @@ public class SystemServiceImpl implements SystemService {
 		return s3client;
 	}
 	
-	public void getObjDetails() {
+	public String getObjectURL(String fileName) {
 		AmazonS3 s3client = gets3ClientObject();
-		String bucketName = CommonConstants.BUCKET_AND_FOLDERNAME;
+		String bucketName = CommonConstants.BUCKET_NAME;
 
 		try {
-			ListObjectsRequest listObjectsRequest =new ListObjectsRequest() .withBucketName(bucketName).withPrefix("upload"+ "/");
+			ListObjectsRequest listObjectsRequest =new ListObjectsRequest() .withBucketName(bucketName).withPrefix("upload"+ "/"+fileName);
 			ObjectListing objects = s3client.listObjects(listObjectsRequest);
 			List<S3ObjectSummary> list = objects.getObjectSummaries();
 			for(S3ObjectSummary image: list) {
 			    S3Object s3object = s3client.getObject(bucketName, image.getKey());
 			    url = s3client.getUrl(bucketName, s3object.getKey());
 			    System.out.println("url : "+url);
+			    return url.toString();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return "";
 	}
 	
-	public void rekognitionImage() {
+	
+	public String rekognitionImage(String fileName) {
+		String lableList = "";
 		AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
-		AmazonS3 s3client = gets3ClientObject();
         DetectLabelsRequest request = new DetectLabelsRequest()
-                .withImage(new Image().withS3Object(new com.amazonaws.services.rekognition.model.S3Object().withName("").withBucket( CommonConstants.BUCKET_AND_FOLDERNAME)))
-                .withMaxLabels(10).withMinConfidence(75F);
-
+                .withImage(new Image().withS3Object(new com.amazonaws.services.rekognition.model.S3Object().withName(fileName).withBucket( CommonConstants.BUCKET_NAME)))
+                .withMaxLabels(10).withMinConfidence(95F);
         try {
             DetectLabelsResult result = rekognitionClient.detectLabels(request);
             List<Label> labels = result.getLabels();
-
-            
+            for (Label label : labels) {
+				lableList+=label.getName();
+			}
+            return lableList;
         }catch (AmazonRekognitionException e) {
             e.printStackTrace();
         } 
+        return "";
     }
-
 }

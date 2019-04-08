@@ -6,21 +6,15 @@ public class File implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String content;
+	private String url;
 
 	private String name;
 
-	private String extension;
+	private String labels;
 
 	private double size;
 
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
+	
 
 	public String getName() {
 		return name;
@@ -30,12 +24,21 @@ public class File implements Serializable {
 		this.name = name;
 	}
 
-	public String getExtension() {
-		return extension;
+
+	public String getUrl() {
+		return url;
 	}
 
-	public void setExtension(String extension) {
-		this.extension = extension;
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getLabels() {
+		return labels;
+	}
+
+	public void setLabels(String labels) {
+		this.labels = labels;
 	}
 
 	public double getSize() {

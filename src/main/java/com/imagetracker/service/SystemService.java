@@ -8,5 +8,7 @@ public interface SystemService {
 
 	public void addFileToSharedFolder(MultipartFile file);
 
-	public void getObjDetails();
+	public String getObjectURL(String fileName);
+	
+	public String rekognitionImage(String fileName);
 }
