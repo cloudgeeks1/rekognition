@@ -2,9 +2,9 @@ package com.imagetracker.service;
 
 public class CommonConstants {
 	
-	public static String ACCESS_KEY_ID = "AKIAUP5TGOXUMN5LSU7D";
+	public static String ACCESS_KEY_ID = "";
 	
-	public static String ACCESS_SEC_KEY = "JeWHCOlOhn+f+Un3SNtTAbDbV3Q82wLy2WrilPue";
+	public static String ACCESS_SEC_KEY = "";
 	
 	public static String BUCKET_NAME = "awsrekognitionimageupload";
 	

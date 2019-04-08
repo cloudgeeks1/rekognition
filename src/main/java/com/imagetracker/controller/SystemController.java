@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.imagetracker.bean.File;
 import com.imagetracker.dto.ConnectionDao;
 import com.imagetracker.service.CommonConstants;
 import com.imagetracker.service.SystemService;
@@ -26,6 +27,7 @@ public class SystemController {
 	@Autowired
 	SystemService service;
 	private List<String> asList;
+	ConnectionDao dao = new ConnectionDao();
 
 	@RequestMapping(value = "/addFileToSharedFolder", method = RequestMethod.POST)
 	public ModelAndView addFileToSharedFolder(@RequestParam("file") MultipartFile file, Model model) {
@@ -57,6 +59,7 @@ public class SystemController {
 		int userId = dao.getUserList(dao.RetriveConnection(), username, passsword);
 		if (userId!=0) {
 			session.setAttribute("userId", userId);
+			session.setAttribute("username", username);
 			mav.setViewName("home");
 		} else {
 			mav.addObject("parameters", "Invalid Username/Password");
@@ -71,7 +74,7 @@ public class SystemController {
 	public ModelAndView register(@RequestParam("username") String username,
 			@RequestParam("password") String passsword) {
 		ModelAndView mav = new ModelAndView();
-		ConnectionDao dao = new ConnectionDao();
+		
 		if (dao.verifyUser(dao.RetriveConnection(), username)) {
 			mav.addObject("parameters", "User already exist");
 			mav.setViewName("login");
@@ -114,9 +117,13 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.POST)
-	public ModelAndView home() {
+	public ModelAndView home(HttpSession session) {
 		//service.getObjDetails();
+		List<File> usersImageInfo = dao.getUsersImageInfo(dao.RetriveConnection(),
+				String.valueOf(session.getAttribute("username")),
+				String.valueOf(session.getAttribute("userId")));
 		ModelAndView mav = new ModelAndView();
+		//mav.addObject("url",usersImageInfo.)
 		mav.setViewName("home");
 
 		return mav;
