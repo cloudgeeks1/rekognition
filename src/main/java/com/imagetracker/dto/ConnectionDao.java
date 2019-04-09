@@ -16,7 +16,7 @@ public class ConnectionDao {
 	public Connection RetriveConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://", "username","password");
+			con = DriverManager.getConnection("jdbc:mysql:", "username","password");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -90,7 +90,7 @@ public class ConnectionDao {
 			conn = RetriveConnection();
 		}
 		try {
-			String insertTableSQL = "INSERT INTO userDB.imagesInfo" + "(userId,username,imageName,url,lables) VALUES" + "(?,?,?,?,?)";
+			String insertTableSQL = "INSERT INTO userDB.ImagesInfo" + "(userId,username,imageName,s3Url,lables) VALUES" + "(?,?,?,?,?)";
 
 			PreparedStatement preparedStatement = conn.prepareStatement(insertTableSQL);
 			preparedStatement.setInt(1, userId);
@@ -100,7 +100,7 @@ public class ConnectionDao {
 			preparedStatement.setString(5, lables);
 			preparedStatement.executeUpdate();
 
-			System.out.println("Record is inserted into userDB.imagesInfo table!");
+			System.out.println("Record is inserted into userDB.ImagesInfo table!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -114,8 +114,11 @@ public class ConnectionDao {
 			conn = RetriveConnection();
 		}
 		try {
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select s3Url,lables from userDB.userInfo where username="+username+ " and userId="+userId);
+			String query = "select s3Url,lables from userDB.ImagesInfo where username= ? and userId= ?";
+			PreparedStatement preparedStatement = conn.prepareStatement(query);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, userId);
+			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				File file = new File();
 				file.setUrl(rs.getString("s3Url"));

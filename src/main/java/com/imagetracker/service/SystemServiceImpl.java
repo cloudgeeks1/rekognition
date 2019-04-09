@@ -27,9 +27,7 @@ import com.amazonaws.services.rekognition.model.AmazonRekognitionException;
 import com.amazonaws.services.rekognition.model.DetectLabelsRequest;
 import com.amazonaws.services.rekognition.model.DetectLabelsResult;
 import com.amazonaws.services.rekognition.model.Image;
-import com.amazonaws.services.rekognition.model.Instance;
 import com.amazonaws.services.rekognition.model.Label;
-import com.amazonaws.services.rekognition.model.Parent;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -40,7 +38,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.imagetracker.dto.ConnectionDao;
 import com.imagetracker.util.FileStorageProperties;
+
 
 @Service
 public class SystemServiceImpl implements SystemService {
@@ -65,12 +65,9 @@ public class SystemServiceImpl implements SystemService {
 		}
 	}
 
-	@Override
-	public void addFileToSharedFolder(MultipartFile file) {
-		uploadFileToS3(file);
-	}
+	
 
-	public void uploadFileToS3(MultipartFile file) {
+	public void uploadFileToS3(MultipartFile file,String userName,int userId,ConnectionDao dao) {
 		// CommonService commonService = new CommonService();
 		// credentials object identifying user for authentication
 		// user must have AWSConnector and AmazonS3FullAccess for
@@ -89,6 +86,10 @@ public class SystemServiceImpl implements SystemService {
 					   new PutObjectRequest(CommonConstants.BUCKET_NAME, filePath, file.getInputStream(), new ObjectMetadata())
 					      .withCannedAcl(CannedAccessControlList.PublicRead));
 			
+			String objectURL = getObjectURL(file.getOriginalFilename());
+			String imageLables = rekognitionImage(file.getOriginalFilename());
+			
+			dao.insertUploadedImageInfo(dao.RetriveConnection(), userId, userName, file.getOriginalFilename(), objectURL, imageLables);
 			
 			
 			
@@ -139,15 +140,18 @@ public class SystemServiceImpl implements SystemService {
 	
 	public String rekognitionImage(String fileName) {
 		String lableList = "";
-		AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.defaultClient();
+		String filePath = CommonConstants.FOLDER_NAME + CommonConstants.SUFFIX + fileName;
+		 S3Object s3object = gets3ClientObject().getObject(CommonConstants.BUCKET_NAME, filePath);
+		  AWSCredentials credentials = new BasicAWSCredentials(CommonConstants.ACCESS_KEY_ID,CommonConstants.ACCESS_SEC_KEY);
+	      AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.standard().withRegion(Regions.US_EAST_2).withCredentials(new AWSStaticCredentialsProvider(credentials)).build();
         DetectLabelsRequest request = new DetectLabelsRequest()
-                .withImage(new Image().withS3Object(new com.amazonaws.services.rekognition.model.S3Object().withName(fileName).withBucket( CommonConstants.BUCKET_NAME)))
+                .withImage(new Image().withS3Object(new com.amazonaws.services.rekognition.model.S3Object().withName(s3object.getKey()).withBucket( CommonConstants.BUCKET_NAME)))
                 .withMaxLabels(10).withMinConfidence(95F);
         try {
             DetectLabelsResult result = rekognitionClient.detectLabels(request);
             List<Label> labels = result.getLabels();
             for (Label label : labels) {
-				lableList+=label.getName();
+				lableList+=label.getName()+",";
 			}
             return lableList;
         }catch (AmazonRekognitionException e) {

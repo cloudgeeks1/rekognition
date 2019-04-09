@@ -33,7 +33,7 @@ public class SystemController {
 	ConnectionDao dao = new ConnectionDao();
 
 	@RequestMapping(value = "/addFileToSharedFolder", method = RequestMethod.POST)
-	public ModelAndView addFileToSharedFolder(@RequestParam("file") MultipartFile file, Model model) {
+	public ModelAndView addFileToSharedFolder(@RequestParam("file") MultipartFile file, Model model,HttpSession session) {
 		String[] validExtension = { "tif", "jpg", "gif", "png" };
 		String[] fileName = file.getOriginalFilename().split("\\.");
 		ModelAndView mav = new ModelAndView();
@@ -42,10 +42,10 @@ public class SystemController {
 		Matcher m = p.matcher(fileName[0]);
 		boolean b = m.find();
 		if (asList.contains(fileName[1]) && (!m.find())) {
-			service.addFileToSharedFolder(file);
-			service.rekognitionImage(file.getOriginalFilename());
+			service.uploadFileToS3(file,String.valueOf(session.getAttribute("username")),
+					Integer.valueOf(String.valueOf(session.getAttribute("userId"))),dao);
 			mav.addObject("parameters", CommonConstants.BUCKET_NAME);
-			mav.setViewName("display");
+			mav.setViewName("home");
 			return mav;
 		} else {
 			mav.addObject("parameters", "File is not Image or File name contains Special Charaters.");
@@ -63,6 +63,19 @@ public class SystemController {
 		if (userId!=0) {
 			session.setAttribute("userId", userId);
 			session.setAttribute("username", username);
+			List<String> s3Url = new ArrayList();
+			Set<String> lables = new HashSet();
+			
+			List<File> usersImageInfo = dao.getUsersImageInfo(dao.RetriveConnection(),
+					String.valueOf(session.getAttribute("username")),
+					String.valueOf(session.getAttribute("userId")));
+			for (File file : usersImageInfo) {
+				s3Url.add(file.getUrl());
+				String[] split = file.getLabels().split(",");
+				service.removeDuplicateLables(lables,split);
+			}
+			mav.addObject("s3Url", s3Url);
+			mav.addObject("labels", lables);
 			mav.setViewName("home");
 		} else {
 			mav.addObject("parameters", "Invalid Username/Password");

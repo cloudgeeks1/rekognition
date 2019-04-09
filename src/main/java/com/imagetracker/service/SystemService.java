@@ -4,11 +4,11 @@ import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.imagetracker.dto.ResultDTO;
+import com.imagetracker.dto.ConnectionDao;
 
 public interface SystemService {
 
-	public void addFileToSharedFolder(MultipartFile file);
+	public void uploadFileToS3(MultipartFile file,String userName,int userId,ConnectionDao dao);
 
 	public String getObjectURL(String fileName);
 	

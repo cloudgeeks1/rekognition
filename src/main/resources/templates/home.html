@@ -41,13 +41,22 @@
 					<img alt=""
 						src="https://s3.us-east-2.amazonaws.com/awsrekognitionimageupload/upload/EBS.jpg"></img>
 				</div> -->
+
+				<div>
+					<h2>Counts List</h2>
+					<table class="table table-striped">
+						<tr th:each="count : ${counts}">
+							<div><img alt="" src="${count}"></img></div>
+						</tr>
+					</table>
+				</div>
 				<div class="login100-form-title"
 					style="background-image: url(images/bg-01.jpg);">
 					<span class="login100-form-title-1"> Upload File to S3 </span>
 				</div>
 				<form method="POST" enctype="multipart/form-data"
 					action="/addFileToSharedFolder">
-					<table style = "margin:auto; ">
+					<table style="margin: auto;">
 						<tr>
 							<td>File to upload:</td>
 							<td><input class="input100" type="file" accept="image/*"
