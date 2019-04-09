@@ -16,8 +16,7 @@ public class ConnectionDao {
 	public Connection RetriveConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://user.csad5jjhx9ft.us-east-2.rds.amazonaws.com", "username",
-					"password");
+			con = DriverManager.getConnection("jdbc:mysql://", "username","password");
 		} catch (Exception e) {
 			System.out.println(e);
 		}
